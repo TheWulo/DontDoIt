@@ -18,9 +18,9 @@ public class RandomGridMapGenerator : MonoBehaviour
 	{
 	    var min = GenerationArea.bounds.min;
 	    var max = GenerationArea.bounds.max;
-	    for (var x = (int)min.x; x < max.x; x++)
+        for (var x = min.x; x < max.x; x += GridResolution.x)
 	    {
-            for (var y = (int)min.y; y < max.y; y++)
+            for (var y = min.y; y < max.y; y += GridResolution.y)
             {
                 var rand = Random.value;
                 if (rand < ChanceToSpawn)
