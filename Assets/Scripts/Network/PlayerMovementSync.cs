@@ -5,7 +5,7 @@ using System.Collections;
 public class PlayerMovementSync : NetworkBehaviour
 {
     [SyncVar]
-    private Vector2 syncPos;
+    private Vector3 syncPos;
     [SerializeField]
     private Transform MyTransform;
     [SerializeField]
@@ -21,12 +21,13 @@ public class PlayerMovementSync : NetworkBehaviour
     {
         if (!isLocalPlayer)
         {
-            MyTransform.position = Vector2.Lerp(MyTransform.position, syncPos, Time.deltaTime * LerpRate);
+            MyTransform.position = Vector3.Lerp(MyTransform.position, syncPos, Time.deltaTime * LerpRate);
+            Debug.Log("Lerp Lerp");
         }
     }
 
     [Command]
-    private void CmdProvidePositionToServer(Vector2 pos)
+    private void CmdProvidePositionToServer(Vector3 pos)
     {
         syncPos = pos;
     }
