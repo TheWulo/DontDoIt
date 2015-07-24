@@ -23,6 +23,7 @@ namespace Assets.Scripts.Traps
             if (isPlayerIn)
             {
                 Debug.Log("Player Killed");
+                playerInsideTrap.Die();
                 UnsetUpTrap();
             }
             Debug.Log("Trap Activated!");
@@ -54,6 +55,7 @@ namespace Assets.Scripts.Traps
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.tag != "Player") return;
+            if (playerInsideTrap == null) return;
             if (other.transform != playerInsideTrap.transform) return;
 
             UnsetUpTrap();
