@@ -5,9 +5,9 @@ public class PlayerNetworkSetup : NetworkBehaviour
 {
     void Start()
     {
-        if(isLocalPlayer)
+        if(!isLocalPlayer)
         {
-            GetComponent<PlayerMovement>().enabled = true;
+            GetComponent<PlayerMovement>().enabled = false;
 
         }
 
