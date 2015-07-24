@@ -4,46 +4,50 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Range(0, 10)] public float MaxMoveSpeed;
-    [Range(0, 10)] public float JumpPower;
-    [Range(0, 1)] public float JumpTimeInSeconds;
+    [Range(0, 1000)] public float RunningSpeed = 100f;
+    [Range(0, 1000)] public float JumpPower = 100f;
+    [Range(0, 1)] public float HorizontalDrag = 0f;
+    [Range(0, 1)] public float VerticalDrag = 0f;
+    public float[] JumpPowerFrames = new float[] { 1f, .9f, .75f, .6f, .4f, .2f };
     public KeyCode JumpKey;
     public GameObject[] TerrainCheckers;
 
     private new Rigidbody2D rigidbody;
-    private bool jumping;
+    private int jumpFrame = 0;
+    private bool jumping = false;
 
-    void Start()
+    public void ResetMovement() 
     {
-        rigidbody = GetComponent<Rigidbody2D>();
-    }
-
-    void Update()
-    {
-        if (Input.GetKey(JumpKey) && !jumping)
-        {
-            var standOnGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
-            if (standOnGround)
-            {
-                StartCoroutine(JumpCoroutine(JumpTimeInSeconds));
-            }
-        }
-    }
-
-    IEnumerator JumpCoroutine(float jumpTime)
-    {
-        jumping = true;
-        var jumpStart = Time.time;
-        while (jumpStart + jumpTime > Time.time)
-        {
-            rigidbody.velocity = new Vector2(0, JumpPower);
-            yield return null;
-        }
+        rigidbody.velocity = new Vector2(0f, 0f);
         jumping = false;
+    }
+
+    void Start() {
+        rigidbody = GetComponent<Rigidbody2D>();
     }
 
     void FixedUpdate ()
 	{
-        transform.position += transform.right * Input.GetAxis("Horizontal") * MaxMoveSpeed * Time.fixedDeltaTime;
+        rigidbody.velocity = new Vector2(rigidbody.velocity.x * HorizontalDrag, rigidbody.velocity.y * VerticalDrag);
+
+        if (Input.GetKey(JumpKey) && !jumping) {
+            var standOnGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
+            if (standOnGround) {
+                jumping = true;
+                jumpFrame = 0;
+            }
+        }
+
+        if (jumping) {
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, JumpPower * JumpPowerFrames[jumpFrame] * Time.fixedDeltaTime);
+            jumpFrame++;
+            if (jumpFrame >= JumpPowerFrames.Length) {
+                jumping = false;
+                jumpFrame = 0;
+            }
+        }
+
+        rigidbody.velocity = new Vector2(rigidbody.velocity.x + Input.GetAxis("Horizontal") * RunningSpeed * Time.fixedDeltaTime, rigidbody.velocity.y);
+
 	}
 }
