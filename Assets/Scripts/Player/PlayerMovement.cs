@@ -7,8 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [Range(0, 10)] public float MaxMoveSpeed;
     [Range(0, 10)] public float JumpPower;
     [Range(0, 1)] public float JumpCooldown;
-    public GameObject TerrainCheckerLeft;
-    public GameObject TerrainCheckerRight;
+    public GameObject[] TerrainCheckers;
 
     private new Rigidbody2D rigidbody;
     private float lastJumpTime;
@@ -23,10 +22,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetAxis("Vertical") > 0 && lastJumpTime + JumpCooldown < Time.time)
         {
-            var standOnGround = Physics2D.OverlapArea(TerrainCheckerLeft.transform.position, TerrainCheckerRight.transform.position, LayerMask.GetMask("Ground"));
-            if (standOnGround != null)
+            var standOnGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
+            if (standOnGround)
             {
-                rigidbody.AddForce(new Vector2(0, JumpPower));
+                lastJumpTime = Time.time;
+                rigidbody.velocity = new Vector2(0, JumpPower);
             }
         }
     }
