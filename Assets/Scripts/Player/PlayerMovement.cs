@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [Range(0, 10)] public float MaxMoveSpeed;
     [Range(0, 10)] public float JumpPower;
     [Range(0, 1)] public float JumpCooldown;
+    public KeyCode JumpKey;
     public GameObject[] TerrainCheckers;
 
     private new Rigidbody2D rigidbody;
@@ -20,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetAxis("Vertical") > 0 && lastJumpTime + JumpCooldown < Time.time)
+        if (Input.GetKey(JumpKey) && lastJumpTime + JumpCooldown < Time.time)
         {
             var standOnGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
             if (standOnGround)
