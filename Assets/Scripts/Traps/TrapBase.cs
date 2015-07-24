@@ -24,6 +24,7 @@ namespace Assets.Scripts.Traps
             {
                 //KILL PLAYER
             }
+            Debug.Log("Trap Activated!");
         }
 
         public void SetUpTrap(/*PlayerBase playerInTrap*/)
@@ -32,12 +33,14 @@ namespace Assets.Scripts.Traps
 
             isPlayerIn = true;
             //playerInsideTrap = playerInTrap;
+            Debug.Log("Trap SetUp!");
         }
 
         public void UnsetUpTrap()
         {
             isPlayerIn = false;
             //playerInsideTrap = null;
+            Debug.Log("Trap UnsetUp!");
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -49,7 +52,7 @@ namespace Assets.Scripts.Traps
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.tag != "player") return;
+            if (other.tag != "Player") return;
             //if (other.transform != playerInsideTrap.transform) return;
 
             UnsetUpTrap();
