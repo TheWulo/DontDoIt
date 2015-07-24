@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using System.Collections;
+using JetBrains.Annotations;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [Range(0, 1)] public float VerticalDrag = 0f;
     public float[] JumpPowerFrames = new float[] { 1f, .9f, .75f, .6f, .4f, .2f };
     public KeyCode JumpKey;
+    public KeyCode JumpKeyController;
     public GameObject[] TerrainCheckers;
 
     private new Rigidbody2D rigidbody;
@@ -30,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
 	{
         rigidbody.velocity = new Vector2(rigidbody.velocity.x * HorizontalDrag, rigidbody.velocity.y * VerticalDrag);
 
-        if (Input.GetKey(JumpKey) && !jumping) {
+        if (Input.GetKey(JumpKey) || Input.GetKey(JumpKeyController) && !jumping) {
             var standOnGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
             if (standOnGround) {
                 jumping = true;
@@ -50,4 +52,5 @@ public class PlayerMovement : MonoBehaviour
         rigidbody.velocity = new Vector2(rigidbody.velocity.x + Input.GetAxis("Horizontal") * RunningSpeed * Time.fixedDeltaTime, rigidbody.velocity.y);
 
 	}
+    
 }

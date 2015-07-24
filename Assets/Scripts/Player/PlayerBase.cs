@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.Audio;
+﻿using Assets.Scripts.Audio;
 using Assets.Scripts.Spawners;
 using UnityEngine;
 using AudioType = Assets.Scripts.Audio.AudioType;
 
 namespace Assets.Scripts.Player
 {
-    public class PlayerBase:MonoBehaviour
+
+    public class PlayerBase : MonoBehaviour
     {
         public string Name;
         public Color Color;

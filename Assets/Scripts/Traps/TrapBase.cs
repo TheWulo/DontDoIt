@@ -22,11 +22,11 @@ namespace Assets.Scripts.Traps
         {
             if (isPlayerIn)
             {
-                Debug.Log("Player Killed");
+                //Debug.Log("Player Killed");
                 playerInsideTrap.Die();
                 UnsetUpTrap();
             }
-            Debug.Log("Trap Activated!");
+            //Debug.Log("Trap Activated!");
         }
 
         public void SetUpTrap(PlayerBase playerInTrap)
@@ -35,14 +35,14 @@ namespace Assets.Scripts.Traps
 
             isPlayerIn = true;
             playerInsideTrap = playerInTrap;
-            Debug.Log("Trap SetUp!");
+            //Debug.Log("Trap SetUp!");
         }
 
         public void UnsetUpTrap()
         {
             isPlayerIn = false;
             playerInsideTrap = null;
-            Debug.Log("Trap UnsetUp!");
+            //Debug.Log("Trap UnsetUp!");
         }
 
         private void OnTriggerEnter2D(Collider2D other)
