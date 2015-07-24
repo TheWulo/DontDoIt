@@ -6,30 +6,40 @@ public class PlayerMovement : MonoBehaviour
 {
     [Range(0, 10)] public float MaxMoveSpeed;
     [Range(0, 10)] public float JumpPower;
-    [Range(0, 1)] public float JumpCooldown;
+    [Range(0, 1)] public float JumpTimeInSeconds;
     public KeyCode JumpKey;
     public GameObject[] TerrainCheckers;
 
     private new Rigidbody2D rigidbody;
-    private float lastJumpTime;
+    private bool jumping;
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
-        lastJumpTime = Time.time;
     }
 
     void Update()
     {
-        if (Input.GetKey(JumpKey) && lastJumpTime + JumpCooldown < Time.time)
+        if (Input.GetKey(JumpKey) && !jumping)
         {
             var standOnGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
             if (standOnGround)
             {
-                lastJumpTime = Time.time;
-                rigidbody.velocity = new Vector2(0, JumpPower);
+                StartCoroutine(JumpCoroutine(JumpTimeInSeconds));
             }
         }
+    }
+
+    IEnumerator JumpCoroutine(float jumpTime)
+    {
+        jumping = true;
+        var jumpStart = Time.time;
+        while (jumpStart + jumpTime > Time.time)
+        {
+            rigidbody.velocity = new Vector2(0, JumpPower);
+            yield return null;
+        }
+        jumping = false;
     }
 
     void FixedUpdate ()
