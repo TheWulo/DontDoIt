@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Player
 {
-    class PlayerBase:MonoBehaviour
+    public class PlayerBase:MonoBehaviour
     {
         public string Name;
         public Color Color;
