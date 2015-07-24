@@ -5,7 +5,7 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour
 {
     [Range(0, 1000)] public float RunningSpeed = 100f;
-    [Range(0, 1000)] public float JumpPower = 100f;
+    [Range(0, 10000)] public float JumpPower = 100f;
     [Range(0, 1)] public float HorizontalDrag = 0f;
     [Range(0, 1)] public float VerticalDrag = 0f;
     public float[] JumpPowerFrames = new float[] { 1f, .9f, .75f, .6f, .4f, .2f };
