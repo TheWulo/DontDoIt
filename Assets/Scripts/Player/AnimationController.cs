@@ -2,8 +2,11 @@
 
 namespace Assets.Scripts.Player
 {
+    public enum AnimationDeathType { DieSpike }
+
     public class AnimationController : MonoBehaviour
     {
+
         public GameObject GFXObject;
         public Animator GFXAnimator;
 
@@ -28,6 +31,11 @@ namespace Assets.Scripts.Player
             {
                 GFXAnimator.Play("Idle");
             }
+        }
+
+        public void PlayDieAnimation(AnimationDeathType type)
+        {
+            GFXAnimator.Play(type.ToString());
         }
     }
 }
