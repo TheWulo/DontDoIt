@@ -33,7 +33,7 @@ namespace Assets.Scripts.Player
             }
         }
 
-        public void DieAnimation(AnimationDeathType type)
+        public void PlayDieAnimation(AnimationDeathType type)
         {
             GFXAnimator.Play(type.ToString());
         }
