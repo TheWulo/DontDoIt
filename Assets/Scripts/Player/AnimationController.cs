@@ -18,26 +18,57 @@ namespace Assets.Scripts.Player
 
         public void Update()
         {
-            if (!isLocalPlayer ||isDying) return;
+            if (isDying) return;
 
-            if (Input.GetAxis("Horizontal") >= 0.1)
+            if (isLocalPlayer)
             {
-                if (GFXObject.gameObject.transform.localScale.x > 0)
-                    GFXObject.gameObject.transform.localScale = new Vector3(GFXObject.gameObject.transform.localScale.x * -1, GFXObject.gameObject.transform.localScale.y, GFXObject.gameObject.transform.localScale.z);
-            }
-            if (Input.GetAxis("Horizontal") <= -0.1)
-            {
-                if (GFXObject.gameObject.transform.localScale.x < 0)
-                    GFXObject.gameObject.transform.localScale = new Vector3(GFXObject.gameObject.transform.localScale.x * -1, GFXObject.gameObject.transform.localScale.y, GFXObject.gameObject.transform.localScale.z);
-            }
+                if (Input.GetAxis("Horizontal") >= 0.1)
+                {
+                    if (GFXObject.gameObject.transform.localScale.x > 0)
+                        GFXObject.gameObject.transform.localScale =
+                            new Vector3(GFXObject.gameObject.transform.localScale.x*-1,
+                                GFXObject.gameObject.transform.localScale.y, GFXObject.gameObject.transform.localScale.z);
+                }
+                if (Input.GetAxis("Horizontal") <= -0.1)
+                {
+                    if (GFXObject.gameObject.transform.localScale.x < 0)
+                        GFXObject.gameObject.transform.localScale =
+                            new Vector3(GFXObject.gameObject.transform.localScale.x*-1,
+                                GFXObject.gameObject.transform.localScale.y, GFXObject.gameObject.transform.localScale.z);
+                }
 
-            if (Input.GetAxis("Horizontal") >= 0.1 || Input.GetAxis("Horizontal") <= -0.1)
-            {
+                if (Input.GetAxis("Horizontal") >= 0.1 || Input.GetAxis("Horizontal") <= -0.1)
+                {
                     GFXAnimator.Play("Run");
+                }
+                else
+                {
+                    GFXAnimator.Play("Idle");
+                }
             }
             else
             {
+                if (gameObject.GetComponent<Rigidbody2D>().velocity.x > 0.1f)
+                {
+                    GFXObject.gameObject.transform.localScale =
+                           new Vector3(GFXObject.gameObject.transform.localScale.x * -1,
+                               GFXObject.gameObject.transform.localScale.y, GFXObject.gameObject.transform.localScale.z);
+                }
+                if (gameObject.GetComponent<Rigidbody2D>().velocity.x < -0.1f)
+                {
+                    if (GFXObject.gameObject.transform.localScale.x < 0)
+                        GFXObject.gameObject.transform.localScale =
+                            new Vector3(GFXObject.gameObject.transform.localScale.x*-1,
+                                GFXObject.gameObject.transform.localScale.y, GFXObject.gameObject.transform.localScale.z);
+                }
+                if (gameObject.GetComponent<Rigidbody2D>().velocity.x > 0.1f || gameObject.GetComponent<Rigidbody2D>().velocity.x < -0.1f)
+                {
+                    GFXAnimator.Play("Run");
+                }
+                else
+                {
                     GFXAnimator.Play("Idle");
+                }
             }
         }
 
