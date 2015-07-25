@@ -25,7 +25,11 @@ namespace Assets.Scripts.Player
         public void Update()
         {
             //QQ
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            if (Input.GetAxis("Horizontal") >= 0.25f || Input.GetAxis("Horizontal") <= -0.25f || Input.GetAxis("Vertical") >= 0.25f || Input.GetAxis("Vertical") <= -0.25f)
+            {
+                bulletSpawningDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
                 bulletSpawningDirection = Vector2.right;
             }
@@ -44,6 +48,11 @@ namespace Assets.Scripts.Player
             //QQ
 
             if (Input.GetKeyDown(KeyCode.C))
+            {
+                Shoot();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Joystick1Button5))
             {
                 Shoot();
             }
