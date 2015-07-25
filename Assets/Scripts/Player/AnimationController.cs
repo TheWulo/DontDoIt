@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts.Player
 {
@@ -30,6 +31,29 @@ namespace Assets.Scripts.Player
             else
             {
                 GFXAnimator.Play("Idle");
+            }
+        }
+
+        void Start()
+        {
+            var player = GetComponent<PlayerBase>();
+            if (player != null)
+            {
+                player.OnDeath += PlayerOnOnDeath;
+            }
+        }
+
+        private void PlayerOnOnDeath(PlayerBase player, DeathReason type)
+        {
+            switch (type)
+            {
+                case DeathReason.TrapSpike:
+                    PlayDieAnimation(AnimationDeathType.DieSpike);
+                    break;
+                case DeathReason.Net:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("type");
             }
         }
 

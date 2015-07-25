@@ -33,7 +33,7 @@ namespace Assets.Scripts.Traps
             {
                 for (int i = 0; i < playersInsideTrap.Count; i++)
                 {
-                    playersInsideTrap[0].Die(DeathReason.Trap);
+                    playersInsideTrap[0].Die(DeathReason.TrapSpike);
                 }
                 playersInsideTrap.Clear();
             }
@@ -48,7 +48,6 @@ namespace Assets.Scripts.Traps
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("Entering");
             var player = other.GetComponent<PlayerBase>();
             if (player)
             {
@@ -58,7 +57,6 @@ namespace Assets.Scripts.Traps
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            Debug.Log("Leaving");
             var player = other.GetComponent<PlayerBase>();
             if (player && playersInsideTrap.Contains(player))
             {

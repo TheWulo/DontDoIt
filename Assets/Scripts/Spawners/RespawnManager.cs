@@ -27,7 +27,7 @@ namespace Assets.Scripts.Spawners
 
         private void OnPlayerDeath(PlayerBase player, DeathReason type)
         {
-            player.gameObject.SetActive(false);
+            player.GetComponent<PlayerMovement>().enabled = false;
             StartCoroutine(SpawnPlayer(player, SpawnTimeInSeconds));
         }
 
@@ -38,7 +38,7 @@ namespace Assets.Scripts.Spawners
             var length = availablePositions.Count;
             var newPosition = availablePositions[Random.Range(0, length)].position;
             player.transform.position = newPosition;
-            player.gameObject.SetActive(true);
+            player.GetComponent<PlayerMovement>().enabled = true;
         }
     }
 }
