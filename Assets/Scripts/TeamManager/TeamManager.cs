@@ -69,7 +69,7 @@ public class TeamManager : MonoBehaviour
 
     private void OnPlayerDeath(PlayerBase player, DeathReason type)
     {
-        if (player.Team == Team.Suicidials && type == DeathReason.Trap)
+        if (player.Team == Team.Suicidials && type == DeathReason.TrapSpike)
         {
             Suicidals.AddPoint();
         }

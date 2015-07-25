@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Player
@@ -10,8 +10,6 @@ namespace Assets.Scripts.Player
 
         public GameObject GFXObject;
         public Animator GFXAnimator;
-
-        public bool isDying;
 
         public void Update()
         {
@@ -28,27 +26,40 @@ namespace Assets.Scripts.Player
 
             if (Input.GetAxis("Horizontal") >= 0.1 || Input.GetAxis("Horizontal") <= -0.1)
             {
-                if (!isDying)
-                    GFXAnimator.Play("Run");
+                GFXAnimator.Play("Run");
             }
             else
             {
-                if (!isDying)
-                    GFXAnimator.Play("Idle");
+                GFXAnimator.Play("Idle");
+            }
+        }
+
+        void Start()
+        {
+            var player = GetComponent<PlayerBase>();
+            if (player != null)
+            {
+                player.OnDeath += PlayerOnOnDeath;
+            }
+        }
+
+        private void PlayerOnOnDeath(PlayerBase player, DeathReason type)
+        {
+            switch (type)
+            {
+                case DeathReason.TrapSpike:
+                    PlayDieAnimation(AnimationDeathType.DieSpike);
+                    break;
+                case DeathReason.Net:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("type");
             }
         }
 
         public void PlayDieAnimation(AnimationDeathType type)
         {
-            isDying = true;
             GFXAnimator.Play(type.ToString());
-            StartCoroutine("Respawn");
-        }
-
-        private IEnumerator Respawn()
-        {
-            yield return new WaitForSeconds(3);
-            isDying = false;
         }
     }
 }
