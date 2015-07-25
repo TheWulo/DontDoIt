@@ -23,7 +23,7 @@ namespace Assets.Scripts.Traps
             if (isPlayerIn)
             {
                 //Debug.Log("Player Killed");
-                playerInsideTrap.Die();
+                playerInsideTrap.Die(DeathReason.Trap);
                 UnsetUpTrap();
             }
             //Debug.Log("Trap Activated!");
