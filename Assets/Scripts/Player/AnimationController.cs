@@ -17,6 +17,8 @@ namespace Assets.Scripts.Player
 
         public void Update()
         {
+            if (isDying) return;
+
             if (Input.GetAxis("Horizontal") >= 0.1)
             {
                 if (GFXObject.gameObject.transform.localScale.x > 0)
@@ -30,12 +32,10 @@ namespace Assets.Scripts.Player
 
             if (Input.GetAxis("Horizontal") >= 0.1 || Input.GetAxis("Horizontal") <= -0.1)
             {
-                if (!isDying)
                     GFXAnimator.Play("Run");
             }
             else
             {
-                if (!isDying)
                     GFXAnimator.Play("Idle");
             }
         }
