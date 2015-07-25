@@ -17,7 +17,7 @@ namespace Assets.Scripts.Traps
             if (isActivating) return;
             //if (other.tag != player) return;
 
-            StartCoroutine("StartAfterTimeCoroutine");
+            StartCoroutine(StartAfterTimeCoroutine());
             isActivating = true;
         }
 
