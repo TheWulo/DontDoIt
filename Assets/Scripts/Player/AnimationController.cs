@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Player
 {
     public enum AnimationDeathType { DieSpike }
 
-    public class AnimationController : MonoBehaviour
+    public class AnimationController : NetworkBehaviour
     {
 
         public GameObject GFXObject;
@@ -17,7 +18,7 @@ namespace Assets.Scripts.Player
 
         public void Update()
         {
-            if (isDying) return;
+            if (!isLocalPlayer ||isDying) return;
 
             if (Input.GetAxis("Horizontal") >= 0.1)
             {

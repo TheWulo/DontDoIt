@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Player;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Traps
 {
-    public class TrapBase : MonoBehaviour
+    public class TrapBase : NetworkBehaviour
     {
         [Header("Trap Base")]
         [SerializeField]
@@ -25,7 +26,7 @@ namespace Assets.Scripts.Traps
             {
                 trapAnimation = GetComponentInChildren<Animator>();
             }
-        }
+        }        
 
         void Update()
         {
@@ -33,7 +34,7 @@ namespace Assets.Scripts.Traps
             {
                 for (int i = 0; i < playersInsideTrap.Count; i++)
                 {
-                    playersInsideTrap[0].Die(DeathReason.TrapSpike);
+                    playersInsideTrap[0].RpcDie(DeathReason.TrapSpike);
                 }
                 playersInsideTrap.Clear();
             }
