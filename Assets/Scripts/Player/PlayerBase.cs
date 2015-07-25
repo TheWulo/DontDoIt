@@ -3,6 +3,7 @@ using Assets.Scripts.Camera;
 using Assets.Scripts.CameraControl;
 using Assets.Scripts.Spawners;
 using UnityEngine;
+using UnityEngine.Networking;
 using AudioType = Assets.Scripts.Audio.AudioType;
 
 namespace Assets.Scripts.Player
@@ -17,7 +18,7 @@ namespace Assets.Scripts.Player
         Trap, Net
     }
 
-    public class PlayerBase : MonoBehaviour
+    public class PlayerBase : NetworkBehaviour
     {
         public string Name;
         public Color Color;
@@ -30,14 +31,17 @@ namespace Assets.Scripts.Player
         void Start()
         {
             Team = TeamManager.instance.Register(this);
-            CameraManager.instance.mainCamera.GetComponent<CameraMovement>().SubscribePlayer(this);
+            if (isLocalPlayer)
+            {
+                CameraManager.instance.mainCamera.GetComponent<CameraMovement>().SubscribePlayer(this);
+                RespawnManager.instance.Register(this);
+            }
         }
 
 
         public void Die(DeathReason reason)
         {
             OnDeath(this, reason);
-            gameObject.transform.position = RespawnManager.instance.GetSpawnPoint();
             AudioManager.instance.PlayAudio(AudioType.PlayerDie);
         }
     }
