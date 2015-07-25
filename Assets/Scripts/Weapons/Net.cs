@@ -5,6 +5,16 @@ namespace Assets.Scripts.Weapons
 {
     public class Net : BulletBase
     {
+        public Vector3 bulletSpawningDirection;
+        public float firePower;
+        private bool velocitySet = false;
+
+        void FixedUpdate()
+        {
+            if (!isServer || velocitySet)
+                return;
+            transform.position += bulletSpawningDirection * firePower;
+        }
         public void OnTriggerEnter2D(Collider2D other)
         {
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))

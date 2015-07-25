@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Weapons;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Player
@@ -13,6 +14,8 @@ namespace Assets.Scripts.Player
         private GameObject bulletPrefab;
         [SerializeField] 
         private float firePower;
+        [SerializeField]
+        private float lifeTimeInSeconds;
 
         public void Shoot()
         {
@@ -62,8 +65,11 @@ namespace Assets.Scripts.Player
         private void CmdSpawnBullet(Vector3 finalSpawnPosition)
         {
             GameObject go = Instantiate(bulletPrefab, finalSpawnPosition, bulletPrefab.transform.rotation) as GameObject;
+            var bul = go.GetComponent<Net>();
+            bul.bulletSpawningDirection = bulletSpawningDirection;
+            bul.firePower = firePower;
+            Destroy(go, lifeTimeInSeconds);
             NetworkServer.Spawn(go);
-            go.GetComponent<Rigidbody2D>().AddForce(bulletSpawningDirection * firePower);
         }
 
         [ClientCallback]

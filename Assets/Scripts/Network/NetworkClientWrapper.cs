@@ -10,12 +10,11 @@ public class NetworkClientWrapper: MonoBehaviour
     public delegate void OnConnectedToServer(NetworkMessage netMsg);
     public event OnConnectedToServer OnConnectionEstablished;
     public NetworkManager NetworkManager;
-    public GameObject Prefab;
+
     void Start()
     {
         NetworkAddress = DefaultAddres;
         NetworkPort = DefaultPort;
-        ClientScene.RegisterPrefab(Prefab);
     }
 
     public string NetworkAddress
