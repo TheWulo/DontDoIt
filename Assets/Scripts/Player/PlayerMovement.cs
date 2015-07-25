@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [Range(0, 10000)] public float JumpPower = 100f;
     [Range(0, 1)] public float HorizontalDrag = 0f;
     [Range(0, 1)] public float VerticalDrag = 0f;
+    [Range(0, 100)] public float GRAVITY = 9.81f;
     public float[] JumpPowerFrames = new float[] { 1f, .9f, .75f, .6f, .4f, .2f };
     public KeyCode JumpKey;
     public KeyCode JumpKeyController;
@@ -30,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate ()
 	{
         rigidbody.velocity = new Vector2(rigidbody.velocity.x * HorizontalDrag, rigidbody.velocity.y * VerticalDrag);
+
+        rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y - GRAVITY * Time.fixedDeltaTime);
 
         if (Input.GetKey(JumpKey) || Input.GetKey(JumpKeyController) && !jumping) {
             var standOnGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
