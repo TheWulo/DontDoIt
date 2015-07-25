@@ -62,8 +62,8 @@ namespace Assets.Scripts.Player
         private void CmdSpawnBullet(Vector3 finalSpawnPosition)
         {
             GameObject go = Instantiate(bulletPrefab, finalSpawnPosition, bulletPrefab.transform.rotation) as GameObject;
-            go.GetComponent<Rigidbody2D>().AddForce(bulletSpawningDirection * firePower);
             NetworkServer.Spawn(go);
+            go.GetComponent<Rigidbody2D>().AddForce(bulletSpawningDirection * firePower);
         }
 
         [ClientCallback]
