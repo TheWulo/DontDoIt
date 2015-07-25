@@ -67,6 +67,28 @@ namespace Assets.Scripts.Player
                 return;
             Team = (Team)Enum.Parse(typeof(Team), teamName);
             Debug.Log("Got team " + Team.ToString() + " Player Id: " + playerId);
+
+            switch (Team)
+            {
+                case Team.Suicidials:
+                    GameObject skin = Instantiate(TeamManager.instance.GetRandomSueciderSkin());
+                    skin.transform.parent = gameObject.transform;
+                    skin.transform.localPosition = new Vector3(0,0 - skin.GetComponent<SkinOffset>().offset,0); //Because fuck you.
+                    skin.transform.localScale = new Vector3(0.8f, 0.4f, 1); //Because fuck you even more.
+                    GetComponent<AnimationController>().GFXAnimator = skin.GetComponent<Animator>();
+                    GetComponent<AnimationController>().GFXObject = skin;
+                    break;
+                case Team.Rescuers:
+                    GameObject skin2 = Instantiate(TeamManager.instance.GetRandomSueciderSkin());
+                    skin2.transform.parent = gameObject.transform;
+                    skin2.transform.localPosition = new Vector3(0,0 - skin2.GetComponent<SkinOffset>().offset,0); //Because fuck you.
+                    skin2.transform.localScale = new Vector3(0.8f, 0.4f, 1); //Because fuck you even more.
+                    GetComponent<AnimationController>().GFXAnimator = skin2.GetComponent<Animator>();
+                    GetComponent<AnimationController>().GFXObject = skin2;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         #endregion
 

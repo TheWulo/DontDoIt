@@ -43,6 +43,9 @@ public class TeamManager : NetworkBehaviour
     public int RescuersCount;
 
     public static TeamManager instance;
+
+    public List<GameObject> RescuersSkins;
+    public List<GameObject> SuecidersSkins; 
     
 
     public void Awake()
@@ -94,6 +97,18 @@ public class TeamManager : NetworkBehaviour
     public Team GetAvailableTeam()
     {
         return RescuersCount <= SuicidersCount ? Team.Rescuers : Team.Suicidials;
+    }
+
+    public GameObject GetRandomRescuerSkin()
+    {
+        int i = UnityEngine.Random.Range(0, RescuersSkins.Count);
+        return RescuersSkins[i];
+    }
+
+    public GameObject GetRandomSueciderSkin()
+    {
+        int i = UnityEngine.Random.Range(0, SuecidersSkins.Count);
+        return SuecidersSkins[i];
     }
 
     
