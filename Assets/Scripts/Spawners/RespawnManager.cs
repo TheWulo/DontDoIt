@@ -1,25 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Assets.Scripts.Player;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Spawners
 {
     public class RespawnManager : MonoBehaviour
     {
         public static RespawnManager instance;
+        public int SpawnTimeInSeconds;
 
-        public List<Transform> SpawnPoints; 
+        public List<Transform> SuicidialSpawnPoints;
+        public List<Transform> RescuerSpawnPoints;
 
         private void Awake()
         {
             instance = this;
         }
 
-        public Vector3 GetSpawnPoint()
+        public void Register(PlayerBase player)
         {
-            if (SpawnPoints.Count == 0) return new Vector3(0,0,0);
+            player.OnDeath += OnPlayerDeath;
+        }
 
-            var index = Random.Range(0, SpawnPoints.Count);
-            return SpawnPoints[index].position;
+        private void OnPlayerDeath(PlayerBase player, DeathReason type)
+        {
+            player.gameObject.SetActive(false);
+            StartCoroutine(SpawnPlayer(player, SpawnTimeInSeconds));
+        }
+
+        IEnumerator SpawnPlayer(PlayerBase player, float time)
+        {
+            yield return new WaitForSeconds(time);
+            var availablePositions = player.Team == Team.Suicidials ? SuicidialSpawnPoints : RescuerSpawnPoints;
+            var length = availablePositions.Count;
+            var newPosition = availablePositions[Random.Range(0, length)].position;
+            player.transform.position = newPosition;
+            player.gameObject.SetActive(true);
         }
     }
 }
