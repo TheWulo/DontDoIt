@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Player
 {
-    public class PlayerWeapon : MonoBehaviour
+    public class PlayerWeapon : NetworkBehaviour
     {
         [SerializeField]
         private float bulletSpawningDistanceOffset;
@@ -18,8 +19,7 @@ namespace Assets.Scripts.Player
             Vector3 finalSpawnPosition = new Vector3(gameObject.transform.position.x + bulletSpawningDirection.x * bulletSpawningDistanceOffset,
                                                         gameObject.transform.position.y + bulletSpawningDirection.y * bulletSpawningDistanceOffset,
                                                         gameObject.transform.position.z);
-            GameObject go = Instantiate(bulletPrefab, finalSpawnPosition, bulletPrefab.transform.rotation) as GameObject;
-            go.GetComponent<Rigidbody2D>().AddForce(bulletSpawningDirection*firePower);
+            OrderBulletSpawn(finalSpawnPosition);
         }
 
         public void Update()
@@ -56,6 +56,21 @@ namespace Assets.Scripts.Player
             {
                 Shoot();
             }
+        }
+
+        [Command]
+        private void CmdSpawnBullet(Vector3 finalSpawnPosition)
+        {
+            GameObject go = Instantiate(bulletPrefab, finalSpawnPosition, bulletPrefab.transform.rotation) as GameObject;
+            go.GetComponent<Rigidbody2D>().AddForce(bulletSpawningDirection * firePower);
+            NetworkServer.Spawn(go);
+        }
+
+        [ClientCallback]
+        private void OrderBulletSpawn(Vector3 pos)
+        {
+            if (isLocalPlayer)
+                CmdSpawnBullet(pos);
         }
     }
 }

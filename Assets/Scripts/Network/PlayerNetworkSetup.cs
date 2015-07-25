@@ -1,15 +1,19 @@
 ﻿using UnityEngine.Networking;
 using System.Collections;
 
-public class PlayerNetworkSetup : NetworkBehaviour
+
+namespace Assets.Scripts.Player
 {
-    void Start()
+    public class PlayerNetworkSetup : NetworkBehaviour
     {
-        if(!isLocalPlayer)
+        void Start()
         {
-            GetComponent<PlayerMovement>().enabled = false;
+            if (!isLocalPlayer)
+            {
+                GetComponent<PlayerMovement>().enabled = false;
+                GetComponent<PlayerWeapon>().enabled = false;
+            }
 
         }
-
     }
 }

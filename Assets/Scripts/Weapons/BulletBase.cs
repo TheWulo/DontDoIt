@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Weapons
 {
-    public class BulletBase : MonoBehaviour
+    public class BulletBase : NetworkBehaviour
     {
         private void OnTriggerEnter2D(Collider2D other)
         {
