@@ -7,9 +7,7 @@ namespace Assets.Scripts.Player
     public class PlayerWeapon : NetworkBehaviour
     {
         [SerializeField]
-        private float bulletSpawningDistanceOffset;
-        [SerializeField]
-        private Vector2 bulletSpawningDirection;
+        private float bulletSpawningDistanceOffset;        
         [SerializeField] 
         private GameObject bulletPrefab;
         [SerializeField] 
@@ -17,16 +15,19 @@ namespace Assets.Scripts.Player
         [SerializeField]
         private float lifeTimeInSeconds;
 
+        private Vector2 bulletSpawningDirection;
+
         public void Shoot()
         {
+            if (!isLocalPlayer) return;
             Vector3 finalSpawnPosition = new Vector3(gameObject.transform.position.x + bulletSpawningDirection.x * bulletSpawningDistanceOffset,
                                                         gameObject.transform.position.y + bulletSpawningDirection.y * bulletSpawningDistanceOffset,
                                                         gameObject.transform.position.z);
-            OrderBulletSpawn(finalSpawnPosition);
+            OrderBulletSpawn(finalSpawnPosition, bulletSpawningDirection);
         }
 
         public void Update()
-        {
+        { 
             //QQ
             if (Input.GetAxis("Horizontal") >= 0.25f || Input.GetAxis("Horizontal") <= -0.25f || Input.GetAxis("Vertical") >= 0.25f || Input.GetAxis("Vertical") <= -0.25f)
             {
@@ -62,21 +63,21 @@ namespace Assets.Scripts.Player
         }
 
         [Command]
-        private void CmdSpawnBullet(Vector3 finalSpawnPosition)
+        private void CmdSpawnBullet(Vector3 finalSpawnPosition, Vector2 dir)
         {
             GameObject go = Instantiate(bulletPrefab, finalSpawnPosition, bulletPrefab.transform.rotation) as GameObject;
             var bul = go.GetComponent<Net>();
-            bul.bulletSpawningDirection = bulletSpawningDirection;
+            bul.bulletSpawningDirection = dir;
             bul.firePower = firePower;
             Destroy(go, lifeTimeInSeconds);
             NetworkServer.Spawn(go);
         }
 
         [ClientCallback]
-        private void OrderBulletSpawn(Vector3 pos)
+        private void OrderBulletSpawn(Vector3 pos, Vector2 dir)
         {
             if (isLocalPlayer)
-                CmdSpawnBullet(pos);
+                CmdSpawnBullet(pos, dir);
         }
     }
 }

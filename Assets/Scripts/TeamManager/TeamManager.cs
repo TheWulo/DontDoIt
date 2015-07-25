@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Scripts.Player;
 using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 [Serializable]
@@ -23,13 +24,23 @@ public class TeamData
 
 }
 
-public class TeamManager : MonoBehaviour
+public class TeamManager : NetworkBehaviour
 {
+    #region old
     public TeamData Suicidals { get; set; }
     public TeamData Rescuers { get; set; }
 
     public int MaxScore = 10;
-    private bool isMaster;
+    #endregion
+
+    [SyncVar]
+    public int SuicidersScore;
+    [SyncVar]
+    public int RescuersScore;
+    [SyncVar]
+    public int SuicidersCount;
+    [SyncVar]
+    public int RescuersCount;
 
     public static TeamManager instance;
     
@@ -41,42 +52,49 @@ public class TeamManager : MonoBehaviour
 
 	void Start ()
 	{
-	    isMaster = true; //TODO
         Suicidals = new TeamData(Team.Suicidials);
         Rescuers = new TeamData(Team.Rescuers);
 	}
 
-    public void AddScore(Team team)
+    #region Server Side Server Logic
+    [Command]
+    public void CmdAddPlayerForSuicidas()
     {
-        if (team == Team.Suicidials)
-        {
-            Suicidals.AddPoint();
-        }
-        else
-        {
-            Rescuers.AddPoint();
-        }
+        SuicidersCount ++;
     }
 
-    public Team Register(PlayerBase playerBase)
+    [Command]
+    public void CmdAddPlayerForRescuers()
     {
-        TeamData teamData = GetAvailableTeam();
-        teamData.PlayerCount++;
-        playerBase.OnDeath += OnPlayerDeath;
-        Debug.Log("Registered player at " + teamData.Team + " side.");
-        return teamData.Team;
+        RescuersCount ++;
     }
 
-    private void OnPlayerDeath(PlayerBase player, DeathReason type)
+
+    [Command]
+    public void CmdAddScoreForSuicidas(int points)
     {
-        if (player.Team == Team.Suicidials && type == DeathReason.Trap)
-        {
-            Suicidals.AddPoint();
-        }
+        SuicidersScore += points;
     }
 
-    private TeamData GetAvailableTeam()
+    [Command]
+    public void CmdAddScoreForRescuers(int points)
     {
-        return Rescuers.PlayerCount <= Suicidals.PlayerCount ? Rescuers : Suicidals;
+        RescuersScore += points;
     }
+    #endregion
+    
+    //private void OnPlayerDeath(PlayerBase player, DeathReason type)
+    //{
+    //    if (player.Team == Team.Suicidials && type == DeathReason.Trap)
+    //    {
+    //        Suicidals.AddPoint();
+    //    }
+    //}
+
+    public Team GetAvailableTeam()
+    {
+        return RescuersCount <= SuicidersCount ? Team.Rescuers : Team.Suicidials;
+    }
+
+    
 }

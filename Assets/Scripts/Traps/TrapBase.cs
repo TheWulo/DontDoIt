@@ -1,9 +1,10 @@
 ﻿using Assets.Scripts.Player;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Traps
 {
-    public class TrapBase : MonoBehaviour
+    public class TrapBase : NetworkBehaviour
     {
         [Header("Trap Base")]
         [SerializeField]
@@ -20,10 +21,11 @@ namespace Assets.Scripts.Traps
 
         public void ActivateTrap()
         {
+            if (!isServer) return;
             if (isPlayerIn)
             {
                 //Debug.Log("Player Killed");
-                playerInsideTrap.Die(DeathReason.Trap);
+                playerInsideTrap.RpcDie(DeathReason.Trap);
                 UnsetUpTrap();
             }
             //Debug.Log("Trap Activated!");

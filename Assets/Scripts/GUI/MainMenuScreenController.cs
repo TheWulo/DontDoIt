@@ -1,7 +1,4 @@
-﻿
-using UnityEngine.Networking;
-
-namespace Assets.Scripts.GUI
+﻿namespace Assets.Scripts.GUI
 {
     public class MainMenuScreenController : GUIScreen
     {
@@ -10,24 +7,19 @@ namespace Assets.Scripts.GUI
         private void HostServer()
         {
             NetworkClientWrapper.StartServerOnly();
-            GUIManager.instance.HideCurrentScreen();
+            GUIManager.instance.ShowScreen(ScreenType.GameGUI);
         }
 
         private void ConnectLocalClient()
         {
             NetworkClientWrapper.StartClient();
-            GUIManager.instance.HideCurrentScreen();
-        }
-
-        public void OnConnected(NetworkMessage netMsg)
-        {
-            GUIManager.instance.HideCurrentScreen();
+            GUIManager.instance.ShowScreen(ScreenType.GameGUI);
         }
 
         public void HostAndConnect()
         {
             NetworkClientWrapper.StartHost();
-            GUIManager.instance.HideCurrentScreen();
+            GUIManager.instance.ShowScreen(ScreenType.GameGUI);
         }
     }
 }
