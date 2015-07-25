@@ -50,6 +50,7 @@ namespace Assets.Scripts.Player
             {
                 if (gameObject.GetComponent<Rigidbody2D>().velocity.x > 0.1f)
                 {
+                    if (GFXObject.gameObject.transform.localScale.x > 0)
                     GFXObject.gameObject.transform.localScale =
                            new Vector3(GFXObject.gameObject.transform.localScale.x * -1,
                                GFXObject.gameObject.transform.localScale.y, GFXObject.gameObject.transform.localScale.z);
