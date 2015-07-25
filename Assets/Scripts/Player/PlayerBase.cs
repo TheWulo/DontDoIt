@@ -1,4 +1,6 @@
 ﻿using Assets.Scripts.Audio;
+using Assets.Scripts.Camera;
+using Assets.Scripts.CameraControl;
 using Assets.Scripts.Spawners;
 using UnityEngine;
 using AudioType = Assets.Scripts.Audio.AudioType;
@@ -28,7 +30,9 @@ namespace Assets.Scripts.Player
         void Start()
         {
             Team = TeamManager.instance.Register(this);
+            CameraManager.instance.mainCamera.GetComponent<CameraMovement>().SubscribePlayer(this);
         }
+
 
         public void Die(DeathReason reason)
         {
