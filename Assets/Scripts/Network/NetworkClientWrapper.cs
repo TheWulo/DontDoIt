@@ -67,11 +67,14 @@ public class NetworkClientWrapper: MonoBehaviour
 
     private void ConnectPlayer()
     {
-        ClientScene.Ready(NetworkManager.client.connection);
-
-        if (ClientScene.localPlayers.Count == 0)
+        if (NetworkClient.active && !ClientScene.ready)
         {
-            ClientScene.AddPlayer(0);
+            ClientScene.Ready(NetworkManager.client.connection);
+
+            if (ClientScene.localPlayers.Count == 0)
+            {
+                ClientScene.AddPlayer(0);
+            }
         }
     }
 
