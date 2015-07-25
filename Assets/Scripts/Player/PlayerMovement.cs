@@ -51,11 +51,11 @@ public class PlayerMovement : MonoBehaviour
         }
 		lastPressedJump = pressedJump;
 		
-		if (jumping && !pressedJump && jumpFrame <= 7) {
+		if (jumping && !pressedJump && jumpFrame <= 6) {
 			shortJump = true;
 		}
 		
-		if (shortJump && jumpFrame == 7) {
+		if (shortJump && jumpFrame == 6) {
 			shortJump = false;
 			jumping = false;
 			jumpFrame = 0;

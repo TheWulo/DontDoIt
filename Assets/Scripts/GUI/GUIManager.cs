@@ -26,7 +26,7 @@ namespace Assets.Scripts.GUI
         {
             HideCurrentScreen();
             currentScreen = GUIScreens.First(screen => screen.type == type);
-            GUIScreens.First(screen => screen.type == type).Show();
+            currentScreen.Show();
         }
 
         public void ShowScreen(int index)
@@ -38,7 +38,10 @@ namespace Assets.Scripts.GUI
         public void HideCurrentScreen()
         {
             if (currentScreen == null) return;
+            //QQ
+            if (currentScreen.type == ScreenType.GameGUI) return;
 
+            Debug.Log("Hiding " + currentScreen.type);
             currentScreen.Hide();
             currentScreen = null;
         }

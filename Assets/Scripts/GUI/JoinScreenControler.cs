@@ -21,12 +21,12 @@ namespace Assets.Scripts.GUI
         {
             NetworkClientWrapper.NetworkAddress = IPfield.text;
             NetworkClientWrapper.StartClient();
-            GUIManager.instance.HideCurrentScreen();
+            GUIManager.instance.ShowScreen(ScreenType.GameGUI);
         }
 
         public void OnConnected(NetworkMessage netMsg)
         {
-            GUIManager.instance.HideCurrentScreen();
+            GUIManager.instance.ShowScreen(ScreenType.GameGUI);
             Debug.Log(netMsg.reader);
         }
     }

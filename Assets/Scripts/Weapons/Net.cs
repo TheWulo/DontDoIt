@@ -7,19 +7,19 @@ namespace Assets.Scripts.Weapons
     {
         public Vector3 bulletSpawningDirection;
         public float firePower;
-        private bool velocitySet = false;
 
         void FixedUpdate()
         {
-            if (!isServer || velocitySet)
+            if (!isServer)
                 return;
             transform.position += Time.deltaTime * bulletSpawningDirection * firePower;
         }
         public void OnTriggerEnter2D(Collider2D other)
         {
+            if (!isServer) return;
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                other.gameObject.GetComponent<PlayerBase>().Die(DeathReason.Net);
+                other.gameObject.GetComponent<PlayerBase>().RpcDie(DeathReason.Net);
             }
         }
     }

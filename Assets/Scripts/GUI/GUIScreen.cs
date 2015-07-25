@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GUI
 {
-    public enum ScreenType { MainMenu = 0, Join = 1}
+    public enum ScreenType { MainMenu = 0, Join = 1, GameGUI = 2}
 
     public class GUIScreen : MonoBehaviour
     {
