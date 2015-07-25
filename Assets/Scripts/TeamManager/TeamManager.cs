@@ -8,7 +8,7 @@ using System.Collections;
 public class TeamData
 {
     public Team Team { get; private set; }
-    public List<PlayerBase> Players = new List<PlayerBase>();
+    public int PlayerCount { get; set; }
     public int Score { get; private set; }
 
     public TeamData(Team team)
@@ -21,21 +21,6 @@ public class TeamData
         Score++;
     }
 
-    public void AddPlayer(PlayerBase player)
-    {
-        if (!Players.Contains(player))
-        {
-            Players.Add(player);
-        }
-    }
-
-    public void RemovePlayer(PlayerBase player)
-    {
-        if (Players.Contains(player))
-        {
-            Players.Remove(player);
-        }
-    }
 }
 
 public class TeamManager : MonoBehaviour
@@ -76,7 +61,7 @@ public class TeamManager : MonoBehaviour
     public Team Register(PlayerBase playerBase)
     {
         TeamData teamData = GetAvailableTeam();
-        teamData.AddPlayer(playerBase);
+        teamData.PlayerCount++;
         playerBase.OnDeath += OnPlayerDeath;
         Debug.Log("Registered player at " + teamData.Team + " side.");
         return teamData.Team;
@@ -92,18 +77,6 @@ public class TeamManager : MonoBehaviour
 
     private TeamData GetAvailableTeam()
     {
-        return Rescuers.Players.Count <= Suicidals.Players.Count ? Rescuers : Suicidals;
-    }
-
-    public void Deregister(PlayerBase player)
-    {
-        if (player.Team == Team.Suicidials)
-        {
-            Suicidals.RemovePlayer(player);
-        }
-        else
-        {
-            Rescuers.RemovePlayer(player);
-        }
+        return Rescuers.PlayerCount <= Suicidals.PlayerCount ? Rescuers : Suicidals;
     }
 }
