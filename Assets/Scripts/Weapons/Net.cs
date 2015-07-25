@@ -13,7 +13,7 @@ namespace Assets.Scripts.Weapons
         {
             if (!isServer || velocitySet)
                 return;
-            transform.position += bulletSpawningDirection * firePower;
+            transform.position += Time.deltaTime * bulletSpawningDirection * firePower;
         }
         public void OnTriggerEnter2D(Collider2D other)
         {
