@@ -6,8 +6,6 @@ namespace Assets.Scripts.Traps
     {
         private void OnTriggerEnter2D(Collider2D other)
         {
-            //if (other.tag != player) return;
-
             ActivateTrap();
         }
     }

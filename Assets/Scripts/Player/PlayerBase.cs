@@ -16,7 +16,7 @@ namespace Assets.Scripts.Player
 
     public enum DeathReason
     {
-        Trap, Net
+        TrapSpike, Net
     }
 
     public class PlayerBase : NetworkBehaviour

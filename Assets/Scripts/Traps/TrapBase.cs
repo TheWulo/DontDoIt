@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Player;
+﻿using System.Collections.Generic;
+using Assets.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,58 +10,59 @@ namespace Assets.Scripts.Traps
         [Header("Trap Base")]
         [SerializeField]
         protected Collider2D triggerArea;
-        protected PlayerBase playerInsideTrap;
-
-        protected bool isPlayerIn;
-
+        public float TrapKillingTime = 1;
+        [SerializeField]
+        protected Animator trapAnimation;
+        protected List<PlayerBase> playersInsideTrap = new List<PlayerBase>();
+        private float lastActivationTime = -100;
+        
         private void Start()
         {
             if (triggerArea == null)
+            {
                 triggerArea = GetComponent<Collider2D>();
+            }
+            if (trapAnimation == null)
+            {
+                trapAnimation = GetComponentInChildren<Animator>();
+            }
+        }        
+
+        void Update()
+        {
+            if (lastActivationTime + TrapKillingTime > Time.time)
+            {
+                for (int i = 0; i < playersInsideTrap.Count; i++)
+                {
+                    playersInsideTrap[0].RpcDie(DeathReason.TrapSpike);
+                }
+                playersInsideTrap.Clear();
+            }
         }
 
         public void ActivateTrap()
         {
-            if (!isServer) return;
-            if (isPlayerIn)
-            {
-                //Debug.Log("Player Killed");
-                playerInsideTrap.RpcDie(DeathReason.Trap);
-                UnsetUpTrap();
-            }
-            //Debug.Log("Trap Activated!");
+            trapAnimation.Play("Activate");
+            lastActivationTime = Time.time;
         }
 
-        public void SetUpTrap(PlayerBase playerInTrap)
-        {
-            if (isPlayerIn) return;
-
-            isPlayerIn = true;
-            playerInsideTrap = playerInTrap;
-            //Debug.Log("Trap SetUp!");
-        }
-
-        public void UnsetUpTrap()
-        {
-            isPlayerIn = false;
-            playerInsideTrap = null;
-            //Debug.Log("Trap UnsetUp!");
-        }
-
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.tag != "Player") return;
-
-            SetUpTrap(other.GetComponent<PlayerBase>());
+            var player = other.GetComponent<PlayerBase>();
+            if (player)
+            {
+                playersInsideTrap.Add(player);
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.tag != "Player") return;
-            if (playerInsideTrap == null) return;
-            if (other.transform != playerInsideTrap.transform) return;
-
-            UnsetUpTrap();
+            var player = other.GetComponent<PlayerBase>();
+            if (player && playersInsideTrap.Contains(player))
+            {
+                playersInsideTrap.Remove(player);
+            }
         }
         
     }
