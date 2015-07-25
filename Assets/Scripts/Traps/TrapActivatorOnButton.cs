@@ -7,7 +7,7 @@ namespace Assets.Scripts.Traps
     {
         public void OnAction()
         {
-            targetTrap.ActivateTrap();
+            ActivateTrap();
         }
     }
 }

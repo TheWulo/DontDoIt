@@ -53,6 +53,10 @@ namespace Assets.Scripts.Player
                 TeamManager.instance.CmdAddScoreForSuicidas(1);
             Debug.Log(string.Format("RpcDie: PlayerId: {0}, Reason: {1}, Team: {2}", netId, reason, Team));
             AudioManager.instance.PlayAudio(AudioType.PlayerDie);
+            if (OnDeath != null)
+            {
+                OnDeath(this, reason);
+            }
         }
 
         #region server side client logic

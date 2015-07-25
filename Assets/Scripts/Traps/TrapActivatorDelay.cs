@@ -5,28 +5,26 @@ using UnityEngine;
 
 namespace Assets.Scripts.Traps
 {
-    public class TrapActivatorDelay : TrapActivator
+    public class TrapActivatorDelay : TrapActivatorProximity
     {
         [Header("Trigger with Delay")] 
         public float TimeOfDelay;
 
         private bool isActivating;
-        
-        private void OnTriggerEnter2D(Collider2D other)
+
+        protected override void OnActivatorTrigger()
         {
             if (isActivating) return;
-            //if (other.tag != player) return;
 
-            StartCoroutine(StartAfterTimeCoroutine());
             isActivating = true;
+            StartCoroutine(StartAfterTimeCoroutine());
         }
 
         private IEnumerator StartAfterTimeCoroutine()
         {
             yield return new WaitForSeconds(TimeOfDelay);
-            targetTrap.ActivateTrap();
+            ActivateTrap();
             isActivating = false;
-            yield return null;
         }
     }
 }

@@ -26,9 +26,7 @@ namespace Assets.Scripts.GUI
         {
             HideCurrentScreen();
             currentScreen = GUIScreens.First(screen => screen.type == type);
-            Debug.Log("current screen type is"+currentScreen.type);
-            GUIScreens.First(screen => screen.type == type).Show();
-            Debug.Log(type.ToString());
+            currentScreen.Show();
         }
 
         public void ShowScreen(int index)

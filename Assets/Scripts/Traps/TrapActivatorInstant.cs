@@ -2,9 +2,9 @@
 
 namespace Assets.Scripts.Traps
 {
-    public class TrapActivatorInstant : TrapActivator
+    public class TrapActivatorInstant : TrapActivatorProximity
     {
-        private void OnTriggerEnter2D(Collider2D other)
+        protected override void OnActivatorTrigger()
         {
             ActivateTrap();
         }
