@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Assets.Scripts.Player
 {
@@ -9,6 +10,8 @@ namespace Assets.Scripts.Player
 
         public GameObject GFXObject;
         public Animator GFXAnimator;
+
+        public bool isDying;
 
         public void Update()
         {
@@ -25,17 +28,27 @@ namespace Assets.Scripts.Player
 
             if (Input.GetAxis("Horizontal") >= 0.1 || Input.GetAxis("Horizontal") <= -0.1)
             {
-                GFXAnimator.Play("Run");
+                if (!isDying)
+                    GFXAnimator.Play("Run");
             }
             else
             {
-                GFXAnimator.Play("Idle");
+                if (!isDying)
+                    GFXAnimator.Play("Idle");
             }
         }
 
         public void PlayDieAnimation(AnimationDeathType type)
         {
+            isDying = true;
             GFXAnimator.Play(type.ToString());
+            StartCoroutine("Respawn");
+        }
+
+        private IEnumerator Respawn()
+        {
+            yield return new WaitForSeconds(3);
+            isDying = false;
         }
     }
 }
