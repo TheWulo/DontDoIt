@@ -9,7 +9,7 @@ namespace Assets.Scripts.Weapons
         {
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                other.gameObject.GetComponent<PlayerBase>().Die();
+                other.gameObject.GetComponent<PlayerBase>().Die(DeathReason.Net);
             }
         }
     }
