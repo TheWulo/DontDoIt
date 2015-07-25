@@ -22,7 +22,6 @@ public class PlayerMovementSync : NetworkBehaviour
         if (!isLocalPlayer)
         {
             MyTransform.position = Vector3.Lerp(MyTransform.position, syncPos, Time.deltaTime * LerpRate);
-            Debug.Log("Lerp Lerp");
         }
     }
 
