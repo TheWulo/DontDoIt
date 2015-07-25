@@ -5,17 +5,17 @@ namespace Assets.Scripts.GUI
 {
     public class MainMenuScreenController : GUIScreen
     {
-        NetworkClient myClient;
+        public NetworkClientWrapper NetworkClientWrapper;
 
         private void HostServer()
         {
-            NetworkServer.Listen(7777);
+            NetworkClientWrapper.StartServerOnly();
+            GUIManager.instance.HideCurrentScreen();
         }
 
         private void ConnectLocalClient()
         {
-            myClient = ClientScene.ConnectLocalServer();
-            myClient.RegisterHandler(MsgType.Connect, OnConnected);
+            NetworkClientWrapper.StartClient();
             GUIManager.instance.HideCurrentScreen();
         }
 
@@ -26,8 +26,8 @@ namespace Assets.Scripts.GUI
 
         public void HostAndConnect()
         {
-            HostServer();
-            ConnectLocalClient();
+            NetworkClientWrapper.StartHost();
+            GUIManager.instance.HideCurrentScreen();
         }
     }
 }
