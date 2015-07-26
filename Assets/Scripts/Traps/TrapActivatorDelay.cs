@@ -1,6 +1,7 @@
 ﻿
 
 using System.Collections;
+using Assets.Scripts.Audio;
 using UnityEngine;
 
 namespace Assets.Scripts.Traps
@@ -17,6 +18,7 @@ namespace Assets.Scripts.Traps
             if (isActivating) return;
 
             isActivating = true;
+            AudioManager.instance.PlayRandomDoItSond();
             StartCoroutine(StartAfterTimeCoroutine());
         }
 
