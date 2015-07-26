@@ -66,6 +66,11 @@ namespace Assets.Scripts.Player
                 return;
             Team = (Team)Enum.Parse(typeof(Team), teamName);
             Debug.Log("Got team " + Team.ToString() + " Player Id: " + playerId);
+            var weapon = GetComponent<PlayerWeapon>();
+            if (weapon && Team == Team.Suicidials)
+            {
+                Destroy(weapon);
+            }
             //SetSkin();
         }
 
