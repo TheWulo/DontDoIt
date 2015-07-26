@@ -8,6 +8,8 @@ namespace Assets.Scripts.Weapons
     {
         public Animator NetAnimator;
 
+        private bool hitGround;
+
         void Start()
         {
             if (NetAnimator == null)
@@ -23,6 +25,7 @@ namespace Assets.Scripts.Weapons
 
             //transform.position += Time.deltaTime * bulletSpawningDirection * firePower;
         }
+
         public void OnTriggerEnter2D(Collider2D other)
         {
             if (!isServer) return;
@@ -30,10 +33,22 @@ namespace Assets.Scripts.Weapons
             {
                 other.gameObject.GetComponent<PlayerBase>().RpcDie(DeathReason.Net);
             }
+            if (other.gameObject.layer != LayerMask.NameToLayer("Player"))
+            {
+                if (NetAnimator != null)
+                {
+                    if (!hitGround)
+                    {
+                        NetAnimator.Play("RopeFinish");
+                        hitGround = true;
+                    }
+                }
+            }
         }
 
         public void Initialize(Vector2 dir, float force)
         {
+            hitGround = false;
             var rigidbody = GetComponent<Rigidbody2D>();
             if (rigidbody)
             {
