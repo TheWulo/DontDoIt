@@ -10,8 +10,6 @@ namespace Assets.Scripts.Traps
     {
         [SerializeField]
         protected float KillDelay;
-        [SerializeField]
-        protected PillsSpawner Spawner;
         // Use this for initialization
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -21,8 +19,16 @@ namespace Assets.Scripts.Traps
             {
                 Debug.Log("Arggh");
                 player.RpcDelayedDie((int)KillDelay, DeathReason.TrapSpike);
-                //Spawner.PillCollected = true;
+                var spawner = GameObject.FindObjectOfType<PillsSpawner>();
+                spawner.CollectPill(this);
             }
+        }
+
+
+        [Command]
+        public void CmdOrderDestroy()
+        {
+            NetworkServer.Destroy(gameObject);
         }
     }
 }
