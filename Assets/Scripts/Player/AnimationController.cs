@@ -19,6 +19,8 @@ namespace Assets.Scripts.Player
         public void Update()
         {
             if (isDying) return;
+            if (GFXObject == null) return;
+            if (GFXAnimator == null) return;
 
             if (isLocalPlayer)
             {
