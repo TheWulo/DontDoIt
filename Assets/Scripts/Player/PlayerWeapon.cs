@@ -6,18 +6,23 @@ namespace Assets.Scripts.Player
 {
     public class PlayerWeapon : NetworkBehaviour
     {
-        [SerializeField]
-        private float bulletSpawningDistanceOffset;        
-        [SerializeField] 
-        private GameObject bulletPrefab;
-        [SerializeField] 
-        private float firePower;
+        [SerializeField] private float bulletSpawningDistanceOffset;        
+        [SerializeField] private GameObject bulletPrefab;
+        [SerializeField] private float firePower;
+        [SerializeField] private int MaxBullets = 5;
+        [SerializeField] private int StartingBullets = 3;
+        [SyncVar] private int bulletsLeft;
 
         private Vector2 bulletSpawningDirection;
 
+        private void Start()
+        {
+            bulletsLeft = StartingBullets;
+        }
+
         public void Shoot()
         {
-            if (!isLocalPlayer) return;
+            if (!isLocalPlayer ||  bulletsLeft <= 0) return;
             Vector3 finalSpawnPosition = new Vector3(gameObject.transform.position.x + bulletSpawningDirection.x * bulletSpawningDistanceOffset,
                                                         gameObject.transform.position.y + bulletSpawningDirection.y * bulletSpawningDistanceOffset,
                                                         gameObject.transform.position.z);
@@ -62,7 +67,7 @@ namespace Assets.Scripts.Player
 
         [Command]
         private void CmdSpawnBullet(Vector3 finalSpawnPosition, Vector2 dir)
-        {
+        {                                                                 
             GameObject go = Instantiate(bulletPrefab, finalSpawnPosition, bulletPrefab.transform.rotation) as GameObject;
             var bul = go.GetComponent<Net>();
             bul.Initialize(dir, firePower);
@@ -73,7 +78,26 @@ namespace Assets.Scripts.Player
         private void OrderBulletSpawn(Vector3 pos, Vector2 dir)
         {
             if (isLocalPlayer)
+            {
+                bulletsLeft--;
                 CmdSpawnBullet(pos, dir);
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            var net = collision.gameObject.GetComponent<Net>();
+            if (net != null && bulletsLeft < MaxBullets)
+            {
+                PickUpNet(net);
+            }
+        }
+
+        private void PickUpNet(Net net)
+        {
+            Debug.Log("PickingUp");
+            net.CmdOrderDestroy();
+            bulletsLeft++;
         }
     }
 }

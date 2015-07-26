@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Player;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Weapons
 {
@@ -27,6 +28,13 @@ namespace Assets.Scripts.Weapons
             {
                 rigidbody.velocity = dir * force;
             }
+        }
+
+
+        [Command]
+        public void CmdOrderDestroy()
+        {
+            NetworkServer.Destroy(gameObject);
         }
     }
 }
