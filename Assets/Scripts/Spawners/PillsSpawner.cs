@@ -23,7 +23,10 @@ public class PillsSpawner : NetworkBehaviour
     void Start()
     {
         if (isServer)
+        {
             PillsOnScene[0].gameObject.SetActive(false);
+            ActivePill = 0;
+        }
     }
 
     public void OnPillCollectedChange(bool newVal)
