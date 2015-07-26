@@ -1,4 +1,5 @@
 ﻿
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -18,6 +19,9 @@ namespace Assets.Scripts.GUI
         [SerializeField]
         protected Text RescuersScore;
 
+        [SerializeField]
+        protected Text Time;
+
         private void LeaveGame()
         {
             NetworkClientWrapper.StopConnection();
@@ -30,6 +34,8 @@ namespace Assets.Scripts.GUI
             SuicidersScore.text = TeamManager.instance.SuicidersScore.ToString();
             RescuersScore.text = TeamManager.instance.RescuersScore.ToString();
             RescuersCount.text = TeamManager.instance.RescuersCount.ToString();
+            var time = Math.Round(TeamManager.instance.SecondsToGameEnd, 2);
+            Time.text = time.ToString("0.00");
         }
         
     }
