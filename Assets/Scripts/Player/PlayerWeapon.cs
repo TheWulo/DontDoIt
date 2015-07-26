@@ -12,8 +12,6 @@ namespace Assets.Scripts.Player
         private GameObject bulletPrefab;
         [SerializeField] 
         private float firePower;
-        [SerializeField]
-        private float lifeTimeInSeconds;
 
         private Vector2 bulletSpawningDirection;
 
@@ -69,7 +67,6 @@ namespace Assets.Scripts.Player
             var bul = go.GetComponent<Net>();
             bul.bulletSpawningDirection = dir;
             bul.firePower = firePower;
-            Destroy(go, lifeTimeInSeconds);
             NetworkServer.Spawn(go);
         }
 
