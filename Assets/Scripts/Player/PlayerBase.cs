@@ -71,6 +71,11 @@ namespace Assets.Scripts.Player
             else if (Team != Team.Rescuers)
                 TeamManager.instance.CmdAddScoreForSuicidas(1);
 
+            if (reason == DeathReason.TrapSpike)
+            {
+                GetComponent<ParticleEffects>().PlayBlood();
+            }
+
             Debug.Log(string.Format("RpcDie: PlayerId: {0}, Reason: {1}, Team: {2}", netId, reason, Team));
             AudioManager.instance.PlayAudio(AudioType.PlayerDie);
             if (OnDeath != null)
