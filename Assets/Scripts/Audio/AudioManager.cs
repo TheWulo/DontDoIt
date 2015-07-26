@@ -10,6 +10,8 @@ namespace Assets.Scripts.Audio
 
         public List<AudioClip> AudioList;
 
+        public List<AudioSource> DoItAudioList; 
+
         private void Awake()
         {
             instance = this;
@@ -21,6 +23,12 @@ namespace Assets.Scripts.Audio
             {
                 audio.Play();
             }
+        }
+
+        public void PlayRandomDoItSond()
+        {
+            int index = Random.Range(0, DoItAudioList.Count);
+            DoItAudioList[index].Play();
         }
     }
 }
