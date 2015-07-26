@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     public GameObject[] TerrainCheckers;
 	public GameObject[] CeilingCheckers;
 
+    public bool touchingGround;
+
     private new Rigidbody2D rigidbody;
     private int jumpFrame = 0;
     private bool jumping = false;
@@ -42,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
         var touchGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
         var touchCeiling = CeilingCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
+        touchingGround = touchGround;
 		
 		//process jumping
 		bool pressedJump = Input.GetKey(JumpKey) || Input.GetKey(JumpKeyController);
