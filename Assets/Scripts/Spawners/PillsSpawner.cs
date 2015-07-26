@@ -9,12 +9,14 @@ using Random = System.Random;
 public class PillsSpawner : NetworkBehaviour
 {
     [SerializeField]
-    protected List<TrapPills> PillsOnScene;
+    protected List<Transform> PillsPositions;
+    [SerializeField]
+    protected GameObject Prefab;
     [SerializeField]
     protected float Cooldown;
-    [SyncVar(hook = "OnPillCollectedChange")]
+    //[SyncVar(hook = "OnPillCollectedChange")]
     public bool PillCollected;
-    [SyncVar(hook = "OnActivePillChange")]
+    //[SyncVar(hook = "OnActivePillChange")]
     public int ActivePill;
 
     private Random random = new System.Random();
@@ -22,16 +24,19 @@ public class PillsSpawner : NetworkBehaviour
 
     void Start()
     {
-        ActivePill = 0;
         if (isServer)
         {
-            PillsOnScene[0].gameObject.SetActive(false);
+            for (int i = 0; i < PillsPositions.Count; i++)
+            {
+                var newPill = (GameObject)Instantiate(Prefab, PillsPositions[i].position, Prefab.transform.rotation);
+                NetworkServer.Spawn(newPill);
+            }
         }
     }
 
     public void OnPillCollectedChange(bool newVal)
     {
-        PillsOnScene.ForEach(x => x.gameObject.SetActive(false));
+        //PillsOnScene.ForEach(x => x.gameObject.SetActive(false));
         StartCoroutine(WaitCooldown());
     }
 
@@ -48,8 +53,8 @@ public class PillsSpawner : NetworkBehaviour
     }
     public void OnActivePillChange(int activePill)
     {
-        if (activePill != -1)
-            PillsOnScene[activePill].gameObject.SetActive(true);
+        //if (activePill != -1)
+            //PillsOnScene[activePill].gameObject.SetActive(true);
     }
 
 }

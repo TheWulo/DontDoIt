@@ -19,9 +19,9 @@ namespace Assets.Scripts.Traps
             var player = other.GetComponent<PlayerBase>();
             if (player)
             {
-                    Debug.Log("Arggh");
+                Debug.Log("Arggh");
                 player.RpcDelayedDie((int)KillDelay, DeathReason.TrapSpike);
-                Spawner.PillCollected = true;
+                //Spawner.PillCollected = true;
             }
         }
     }
