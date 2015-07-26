@@ -24,8 +24,6 @@ namespace Assets.Scripts.Weapons
 
         void FixedUpdate()
         {
-            if (!isServer)
-                return;
             if (rigidbody != null)
             {
                 var velocity = rigidbody.velocity.magnitude;
