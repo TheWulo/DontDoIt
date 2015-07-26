@@ -6,10 +6,21 @@ namespace Assets.Scripts.Weapons
 {
     public class Net : BulletBase
     {
+        public Animator NetAnimator;
+
+        void Start()
+        {
+            if (NetAnimator == null)
+            {
+                NetAnimator = GetComponentInChildren<Animator>();
+            }
+        }
+
         void FixedUpdate()
         {
             if (!isServer)
                 return;
+
             //transform.position += Time.deltaTime * bulletSpawningDirection * firePower;
         }
         public void OnTriggerEnter2D(Collider2D other)
@@ -27,6 +38,10 @@ namespace Assets.Scripts.Weapons
             if (rigidbody)
             {
                 rigidbody.velocity = dir * force;
+            }
+            if (NetAnimator != null)
+            {
+                NetAnimator.Play("RopeFire");
             }
         }
 
