@@ -22,10 +22,10 @@ public class PillsSpawner : NetworkBehaviour
 
     void Start()
     {
+        ActivePill = 0;
         if (isServer)
         {
             PillsOnScene[0].gameObject.SetActive(false);
-            ActivePill = 0;
         }
     }
 
