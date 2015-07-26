@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Player
 {
-    public enum AnimationDeathType { DieSpike }
+    public enum AnimationDeathType { DieSpike, DieNet }
 
     public class AnimationController : NetworkBehaviour
     {

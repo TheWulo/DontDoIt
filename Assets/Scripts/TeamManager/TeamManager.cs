@@ -27,10 +27,12 @@ public class TeamData
 public class TeamManager : NetworkBehaviour
 {
     #region old
+    public NetworkClientWrapper NetworkClientWrapper;
     public TeamData Suicidals { get; set; }
     public TeamData Rescuers { get; set; }
 
     public int MaxScore = 10;
+    public int SecondsToRescuersWin;
     #endregion
 
     [SyncVar]
@@ -41,35 +43,58 @@ public class TeamManager : NetworkBehaviour
     public int SuicidersCount;
     [SyncVar]
     public int RescuersCount;
+    [SyncVar]
+    public float SecondsToGameEnd;
 
     public static TeamManager instance;
 
     public List<GameObject> RescuersSkins;
-    public List<GameObject> SuecidersSkins; 
-    
+    public List<GameObject> SuecidersSkins;
+
 
     public void Awake()
     {
         instance = this;
     }
 
-	void Start ()
-	{
+    void Start()
+    {
         Suicidals = new TeamData(Team.Suicidials);
         Rescuers = new TeamData(Team.Rescuers);
-	}
+        if (isServer)
+            SecondsToGameEnd = SecondsToRescuersWin;
+    }
+
+    void Update()
+    {
+        if (isServer)
+        {
+            var newTime = SecondsToGameEnd - Time.deltaTime;
+            SecondsToGameEnd = newTime < 0 ? 0 : newTime;
+            if (SecondsToGameEnd <= 0)
+            {
+                NetworkClientWrapper.LoadRescuersWon();
+                return;
+            }
+            if (SuicidersScore >= MaxScore)
+            {
+                NetworkClientWrapper.LoadSuicidersWon();
+                return;
+            }
+        }
+    }
 
     #region Server Side Server Logic
     [Command]
     public void CmdAddPlayerForSuicidas()
     {
-        SuicidersCount ++;
+        SuicidersCount++;
     }
 
     [Command]
     public void CmdAddPlayerForRescuers()
     {
-        RescuersCount ++;
+        RescuersCount++;
     }
 
 
@@ -85,7 +110,7 @@ public class TeamManager : NetworkBehaviour
         RescuersScore += points;
     }
     #endregion
-    
+
     //private void OnPlayerDeath(PlayerBase player, DeathReason type)
     //{
     //    if (player.Team == Team.Suicidials && type == DeathReason.Trap)
@@ -111,5 +136,5 @@ public class TeamManager : NetworkBehaviour
         return SuecidersSkins[i];
     }
 
-    
+
 }
