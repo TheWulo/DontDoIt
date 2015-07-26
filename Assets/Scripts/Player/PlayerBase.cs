@@ -3,6 +3,7 @@ using Assets.Scripts.Camera;
 using Assets.Scripts.CameraControl;
 using Assets.Scripts.Spawners;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using AudioType = Assets.Scripts.Audio.AudioType;
@@ -26,6 +27,8 @@ namespace Assets.Scripts.Player
 
         [SyncVar]
         public Team Team;
+        [SyncVar(hook = "OnIsDeadChange")]
+        public bool IsDead;
 
         public delegate void OnDeathHandler(PlayerBase player, DeathReason type);
 
@@ -45,6 +48,24 @@ namespace Assets.Scripts.Player
         [ClientRpc]
         public void RpcDie(DeathReason reason)
         {
+            Die(reason);
+        }
+
+        [ClientRpc]
+        public void RpcDelayedDie(int seconds, DeathReason reason)
+        {
+
+            StartCoroutine(DelayedDie(seconds, reason));
+        }
+
+        private IEnumerator DelayedDie(int seconds, DeathReason reason)
+        {
+            yield return new WaitForSeconds(seconds);
+            Die(reason);
+        }
+
+        private void Die(DeathReason reason)
+        {
             if (reason == DeathReason.Net && Team != Team.Rescuers)
                 TeamManager.instance.CmdAddScoreForRescuers(1);
             else if (Team != Team.Rescuers)
@@ -56,6 +77,21 @@ namespace Assets.Scripts.Player
             {
                 OnDeath(this, reason);
             }
+        }
+
+        public void OnIsDeadChange(bool newVal)
+        {
+            Debug.Log("OnIsDead!!!!");
+            if (Team != Team.Rescuers)
+                TeamManager.instance.CmdAddScoreForSuicidas(1);
+
+            Debug.Log(string.Format("RpcDie: PlayerId: {0}, Reason: {1}, Team: {2}", netId, DeathReason.TrapSpike, Team));
+            AudioManager.instance.PlayAudio(AudioType.PlayerDie);
+            if (OnDeath != null)
+            {
+                OnDeath(this, DeathReason.TrapSpike);
+            }
+            IsDead = false;
         }
 
         #region server side client logic

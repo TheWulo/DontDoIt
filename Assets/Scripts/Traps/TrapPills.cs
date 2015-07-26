@@ -13,23 +13,16 @@ namespace Assets.Scripts.Traps
         [SerializeField]
         protected PillsSpawner Spawner;
         // Use this for initialization
-        
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             var player = other.GetComponent<PlayerBase>();
-            if (player && player.isLocalPlayer)
+            if (player)
             {
-                StartCoroutine(DelayedDeath(player));
-                Spawner.Collected();
+                    Debug.Log("Arggh");
+                player.RpcDelayedDie((int)KillDelay, DeathReason.TrapSpike);
+                Spawner.PillCollected = true;
             }
         }
-
-        private IEnumerator DelayedDeath(PlayerBase playerBase)
-        {
-            yield return new WaitForSeconds(KillDelay);
-            if(isServer)
-            playerBase.RpcDie(DeathReason.TrapSpike);
-        }
-
     }
 }
