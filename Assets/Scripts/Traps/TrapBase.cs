@@ -34,7 +34,7 @@ namespace Assets.Scripts.Traps
             {
                 for (int i = 0; i < playersInsideTrap.Count; i++)
                 {
-                    playersInsideTrap[0].RpcDie(DeathReason.TrapSpike);
+                    playersInsideTrap[i].RpcDie(DeathReason.TrapSpike);
                 }
                 playersInsideTrap.Clear();
             }
