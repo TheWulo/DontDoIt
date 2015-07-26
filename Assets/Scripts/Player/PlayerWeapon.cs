@@ -70,6 +70,7 @@ namespace Assets.Scripts.Player
         {                                                                 
             GameObject go = Instantiate(bulletPrefab, finalSpawnPosition, bulletPrefab.transform.rotation) as GameObject;
             var bul = go.GetComponent<Net>();
+            dir.Normalize();
             bul.Initialize(dir, firePower);
             NetworkServer.Spawn(go);
         }

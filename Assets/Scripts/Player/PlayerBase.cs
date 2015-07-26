@@ -47,10 +47,9 @@ namespace Assets.Scripts.Player
         {
             if (reason == DeathReason.Net && Team != Team.Rescuers)
                 TeamManager.instance.CmdAddScoreForRescuers(1);
-            else if (reason == DeathReason.Net )
-                return;
-            else
+            else if (Team != Team.Rescuers)
                 TeamManager.instance.CmdAddScoreForSuicidas(1);
+
             Debug.Log(string.Format("RpcDie: PlayerId: {0}, Reason: {1}, Team: {2}", netId, reason, Team));
             AudioManager.instance.PlayAudio(AudioType.PlayerDie);
             if (OnDeath != null)
@@ -67,6 +66,11 @@ namespace Assets.Scripts.Player
                 return;
             Team = (Team)Enum.Parse(typeof(Team), teamName);
             Debug.Log("Got team " + Team.ToString() + " Player Id: " + playerId);
+            var weapon = GetComponent<PlayerWeapon>();
+            if (weapon && Team == Team.Suicidials)
+            {
+                Destroy(weapon);
+            }
             //SetSkin();
         }
 
