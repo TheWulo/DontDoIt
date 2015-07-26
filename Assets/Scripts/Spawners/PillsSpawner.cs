@@ -12,6 +12,11 @@ public class PillsSpawner : NetworkBehaviour
     protected List<TrapPills> PillsOnScene;
     [SerializeField]
     protected float Cooldown;
+    [SyncVar(hook = "OnPillCollectedChange")]
+    public bool PillCollected;
+    [SyncVar(hook = "OnActivePillChange")]
+    public int ActivePill;
+
     private Random random = new System.Random();
 
 
@@ -21,16 +26,27 @@ public class PillsSpawner : NetworkBehaviour
             PillsOnScene[0].gameObject.SetActive(false);
     }
 
-    public void Collected()
+    public void OnPillCollectedChange(bool newVal)
     {
-        if (!isServer) return;
         PillsOnScene.ForEach(x => x.gameObject.SetActive(false));
         StartCoroutine(WaitCooldown());
     }
 
     private IEnumerator WaitCooldown()
     {
+        ActivePill = -1;
         yield return new WaitForSeconds(Cooldown);
-        PillsOnScene[random.Next(0, 2)].gameObject.SetActive(true);
+        if (isServer)
+        {
+            ActivePill = random.Next(0, 2);
+            PillCollected = false;
+        }
+
     }
+    public void OnActivePillChange(int activePill)
+    {
+        if (activePill != -1)
+            PillsOnScene[activePill].gameObject.SetActive(true);
+    }
+
 }
