@@ -88,7 +88,7 @@ namespace Assets.Scripts.Player
         private void OnTriggerEnter2D(Collider2D collision)
         {
             var net = collision.gameObject.GetComponent<Net>();
-            if (net != null && bulletsLeft < MaxBullets)
+            if (net != null && bulletsLeft < MaxBullets && net.isSlowed)
             {
                 PickUpNet(net);
             }
