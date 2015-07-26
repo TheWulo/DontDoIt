@@ -10,11 +10,10 @@ namespace Assets.Scripts.Traps
         [Header("Trap Base")]
         [SerializeField]
         protected Collider2D triggerArea;
-        public float TrapKillingTime = 1;
         [SerializeField]
         protected Animator trapAnimation;
         protected List<PlayerBase> playersInsideTrap = new List<PlayerBase>();
-        private float lastActivationTime = -100;
+        protected float lastActivationTime = -100;
         
         private void Start()
         {
@@ -26,43 +25,12 @@ namespace Assets.Scripts.Traps
             {
                 trapAnimation = GetComponentInChildren<Animator>();
             }
-        }        
-
-        void Update()
-        {
-            if (lastActivationTime + TrapKillingTime > Time.time)
-            {
-                for (int i = 0; i < playersInsideTrap.Count; i++)
-                {
-                    playersInsideTrap[i].RpcDie(DeathReason.TrapSpike);
-                }
-                playersInsideTrap.Clear();
-            }
         }
 
         public void ActivateTrap()
         {
             trapAnimation.Play("Activate");
             lastActivationTime = Time.time;
-        }
-
-        
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            var player = other.GetComponent<PlayerBase>();
-            if (player)
-            {
-                playersInsideTrap.Add(player);
-            }
-        }
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            var player = other.GetComponent<PlayerBase>();
-            if (player && playersInsideTrap.Contains(player))
-            {
-                playersInsideTrap.Remove(player);
-            }
         }
         
     }
