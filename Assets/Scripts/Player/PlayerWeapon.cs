@@ -66,7 +66,7 @@ namespace Assets.Scripts.Player
         }
 
         [Command]
-        private void CmdSpawnBullet(Vector3 finalSpawnPosition, Vector2 dir)
+        public void CmdSpawnBullet(Vector3 finalSpawnPosition, Vector2 dir)
         {                                                                 
             GameObject go = Instantiate(bulletPrefab, finalSpawnPosition, bulletPrefab.transform.rotation) as GameObject;
             var bul = go.GetComponent<Net>();

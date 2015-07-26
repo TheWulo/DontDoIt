@@ -28,17 +28,23 @@ namespace Assets.Scripts.Spawners
         private void OnPlayerDeath(PlayerBase player, DeathReason type)
         {
             player.GetComponent<PlayerMovement>().alive = false;
-            StartCoroutine(SpawnPlayer(player, SpawnTimeInSeconds));
+            StartCoroutine(SpawnPlayer(player, SpawnTimeInSeconds, type));
         }
 
-        IEnumerator SpawnPlayer(PlayerBase player, float time)
+        IEnumerator SpawnPlayer(PlayerBase player, float time, DeathReason type)
         {
             yield return new WaitForSeconds(time);
             var availablePositions = player.Team == Team.Suicidials ? SuicidialSpawnPoints : RescuerSpawnPoints;
             var length = availablePositions.Count;
             var newPosition = availablePositions[Random.Range(0, length)].position;
+            if (type == DeathReason.Net)
+            {
+                var weapon = GameObject.FindObjectOfType<PlayerWeapon>();
+                weapon.CmdSpawnBullet(player.transform.position, new Vector2());
+            }
             player.transform.position = newPosition;
             player.GetComponent<PlayerMovement>().alive = true;
+            
         }
     }
 }
