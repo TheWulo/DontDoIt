@@ -20,14 +20,19 @@ public class PlayerMovement : MonoBehaviour
     private new Rigidbody2D rigidbody;
     private int jumpFrame = 0;
     private bool jumping = false;
-	private bool lastPressedJump = false;
 	private bool shortJump = false;
+	private bool alive = true;
+	private int lastPressedJump = 1<<20;
+	private int lastOnGround = 1<<20;
+	private int seqPressedJump = 0;
 
     public void ResetMovement() 
     {
         rigidbody.velocity = new Vector2(0f, 0f);
         jumping = false;
-		lastPressedJump = false;
+		lastPressedJump = 1<<20;
+		lastOnGround = 1<<20;
+		seqPressedJump = 0;
     }
 
     void Start() {
@@ -42,17 +47,21 @@ public class PlayerMovement : MonoBehaviour
 		//add custom gravity
         rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y - Gravity * Time.fixedDeltaTime);
 
-        var touchGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
-        var touchCeiling = CeilingCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground")));
+        var touchGround = TerrainCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground") | LayerMask.GetMask("Player")));
+        var touchCeiling = CeilingCheckers.Any(o => Physics2D.OverlapPoint(o.transform.position, LayerMask.GetMask("Ground") | LayerMask.GetMask("Player")));
+		bool pressedJump = alive && (Input.GetKey(JumpKey) || Input.GetKey(JumpKeyController));
+		
         touchingGround = touchGround;
 		
+		lastOnGround = touchGround ? 0 : lastOnGround + 1;
+		lastPressedJump = pressedJump ? 0 : lastPressedJump + 1;
+		seqPressedJump = pressedJump ? seqPressedJump + 1 : 0;
+		
 		//process jumping
-		bool pressedJump = Input.GetKey(JumpKey) || Input.GetKey(JumpKeyController);
-        if (pressedJump && !lastPressedJump && !jumping && touchGround) {
+        if (lastPressedJump <= 2 && seqPressedJump <= 3 && !jumping && lastOnGround <= 2) {
 			jumping = true;
 			jumpFrame = 0;
         }
-		lastPressedJump = pressedJump;
 		
 		if (jumping && !pressedJump && jumpFrame <= 6) {
 			shortJump = true;
@@ -78,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        rigidbody.velocity = new Vector2(rigidbody.velocity.x + Input.GetAxis("Horizontal") * RunningSpeed * Time.fixedDeltaTime, rigidbody.velocity.y);
+        rigidbody.velocity = new Vector2(rigidbody.velocity.x + (alive ? Input.GetAxis("Horizontal") : 0) * RunningSpeed * Time.fixedDeltaTime, rigidbody.velocity.y);
 
 	}
 }
