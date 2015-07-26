@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private int jumpFrame = 0;
     private bool jumping = false;
 	private bool shortJump = false;
-	private bool alive = true;
+	public bool alive = true;
 	private int lastPressedJump = 1<<20;
 	private int lastOnGround = 1<<20;
 	private int seqPressedJump = 0;
