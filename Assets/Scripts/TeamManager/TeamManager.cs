@@ -67,8 +67,6 @@ public class TeamManager : NetworkBehaviour
 
     void Update()
     {
-        if (!isServer)
-            SetDirtyBit(0xFFFFFFFF);
         if (isServer)
         {
             var newTime = SecondsToGameEnd - Time.deltaTime;
