@@ -66,6 +66,16 @@ public class NetworkClientWrapper: MonoBehaviour
         }
     }
 
+    public void LoadRescuersWon()
+    {
+        NetworkManager.ServerChangeScene("RescuersWon");
+    }
+    
+    public void LoadSuicidersWon()
+    {
+        NetworkManager.ServerChangeScene("SuicidersWon");
+    }
+
     private void ConnectPlayer()
     {
         if (NetworkClient.active && !ClientScene.ready)

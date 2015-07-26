@@ -4,49 +4,53 @@ using Assets.Scripts.Traps;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using System;
-using Random = System.Random;
+using Random = UnityEngine.Random;
 
 public class PillsSpawner : NetworkBehaviour
 {
     [SerializeField]
-    protected List<TrapPills> PillsOnScene;
+    protected List<Transform> PillsPositions;
+    [SerializeField]
+    protected GameObject Prefab;
     [SerializeField]
     protected float Cooldown;
-    [SyncVar(hook = "OnPillCollectedChange")]
+    //[SyncVar(hook = "OnPillCollectedChange")]
     public bool PillCollected;
-    [SyncVar(hook = "OnActivePillChange")]
+    //[SyncVar(hook = "OnActivePillChange")]
     public int ActivePill;
-
-    private Random random = new System.Random();
-
 
     void Start()
     {
         if (isServer)
-            PillsOnScene[0].gameObject.SetActive(false);
+        {
+            SpawnPill();
+        }
     }
 
-    public void OnPillCollectedChange(bool newVal)
+    private void SpawnPill()
     {
-        PillsOnScene.ForEach(x => x.gameObject.SetActive(false));
-        StartCoroutine(WaitCooldown());
+        var count = PillsPositions.Count;
+        var index = Random.Range(0, count);
+        var newPill = (GameObject)Instantiate(Prefab, PillsPositions[index].position, Prefab.transform.rotation);
+        NetworkServer.Spawn(newPill);
+    }
+
+    public void CollectPill(TrapPills pill)
+    {
+        pill.CmdOrderDestroy();
+        if (isServer)
+        {
+            StartCoroutine(WaitCooldown());
+        }
     }
 
     private IEnumerator WaitCooldown()
     {
-        ActivePill = -1;
         yield return new WaitForSeconds(Cooldown);
         if (isServer)
         {
-            ActivePill = random.Next(0, 2);
-            PillCollected = false;
+            SpawnPill();
         }
 
     }
-    public void OnActivePillChange(int activePill)
-    {
-        if (activePill != -1)
-            PillsOnScene[activePill].gameObject.SetActive(true);
-    }
-
 }

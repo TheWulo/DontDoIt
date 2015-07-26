@@ -75,6 +75,10 @@ namespace Assets.Scripts.Player
             {
                 GetComponent<ParticleEffects>().PlayBlood();
             }
+            if (reason == DeathReason.Net)
+            {
+                GetComponent<AnimationController>().PlayDieAnimation(AnimationDeathType.DieNet);
+            }
 
             Debug.Log(string.Format("RpcDie: PlayerId: {0}, Reason: {1}, Team: {2}", netId, reason, Team));
             AudioManager.instance.PlayAudio(AudioType.PlayerDie);
